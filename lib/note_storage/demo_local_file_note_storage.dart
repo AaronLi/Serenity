@@ -23,7 +23,7 @@ class DemoLocalFileNoteStorage implements INoteStorage {
   }
 
   Future<Map<String, INote>> get _readDatabase async {
-    print("Database ${localDatabase.toString()}");
+    //print("Database ${localDatabase.toString()}");
     if (localDatabase == null) {
       // if we haven't intialized the local database
       File loadFile = await _filepath;

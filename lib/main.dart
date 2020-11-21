@@ -51,11 +51,16 @@ class _JournalHomepageState extends State<JournalHomePage> {
                           image: DecorationImage(
                               fit: BoxFit.fitWidth,
                               image: FileImage(note.getImage())))))),
-          ElevatedButton(onPressed: () => {}, child: Text(note.getTitle()))
+          ElevatedButton(
+              onPressed: () => {openEditor(uuid: note.getUUID())},
+              child: Row(children: [
+                Text(note.getTitle()),
+                Text(note.getScore().toStringAsPrecision(2)),
+              ], mainAxisAlignment: MainAxisAlignment.spaceAround))
         ]));
   }
 
-  void openEditor({uuid}) async {
+  Future<void> openEditor({uuid}) async {
     await Navigator.push(
         context,
         MaterialPageRoute(

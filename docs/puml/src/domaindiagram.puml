@@ -7,14 +7,17 @@ interface INote{
     +getTitle():String
     +getDate():DateTime
     +getBody():String
-    +getImage():File
+    +getImage():dart:io:File
     +getUUID():String
     +getScore():double
     ..
-    +setTitle():String
-    +setDate():DateTime
-    +setBody():String
-    +setImage():File
+    +setTitle(String newTitle)
+    +setDate(DateTime newDateTime)
+    +setBody(String newBody)
+    +setImage(dart:io:File newImage)
+    ..
+    +fromJson(Map<String, dynamic> json)
+    +toJson():Map<String, dynamic>
 }
 note top of INote: https://pub.dev/packages/image_picker for choosing images\nhttps://pub.dev/packages/uuid for creating note uuid's
 
@@ -24,6 +27,7 @@ interface INoteStorage{
     +getNotes(DateTime from, DateTime to):List<String> list of uuids
     +getNote(String uuid):INote
     +getTitle(String uuid):String lighter than getting a full note
+    +putNote(INote newNote):bool
 }
 
 class DemoLocalFileNoteStorage{
@@ -31,6 +35,7 @@ class DemoLocalFileNoteStorage{
     +getNotes():List<String> list of uuids
     +getNote(String uuid):INote
     +getTitle(String uuid):String
+    +putNote(INote newNote):bool
 }
 
 class OnlineDatabaseNoteStorage{
@@ -38,6 +43,7 @@ class OnlineDatabaseNoteStorage{
     +getNotes():List<String> list of uuids
     +getNote(String uuid):INote
     +getTitle(String uuid):String
+    +putNote(INote newNote):bool
 }
 
 class Note{
@@ -67,7 +73,13 @@ class ArtificialIntelligenceAnalyzer{
     Stretch goal, low priority for Hackathon
     +analyzeText(String contents):double
 }
+class NoteMakerScreen{
+    What the user uses to make notes
+}
 
+class MonthViewScreen{
+    What the user uses to view their review
+}
 
 DemoLocalFileNoteStorage ..|> INoteStorage
 OnlineDatabaseNoteStorage ..|> INoteStorage
@@ -81,4 +93,7 @@ note on link
 When adding a new note to the storage, analyze its sentiment
 end note
 
+INote --> NoteMakerScreen: Produced by
+NoteMakerScreen --> INoteStorage: stores Notes into
+Calendar <-- MonthViewScreen: populates UI with info from
 @enduml

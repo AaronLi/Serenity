@@ -1,0 +1,84 @@
+@startuml app
+
+interface INote{
+    Only do images if we have time
+    UUID's are not settable, only create with alongside INote
+    ..
+    +getTitle():String
+    +getDate():DateTime
+    +getBody():String
+    +getImage():File
+    +getUUID():String
+    +getScore():double
+    ..
+    +setTitle():String
+    +setDate():DateTime
+    +setBody():String
+    +setImage():File
+}
+note top of INote: https://pub.dev/packages/image_picker for choosing images\nhttps://pub.dev/packages/uuid for creating note uuid's
+
+interface INoteStorage{
+    Ideally getTitle will be much less expensive to execute per note
+    TODO: methods that reduce database accesses
+    +getNotes(DateTime from, DateTime to):List<String> list of uuids
+    +getNote(String uuid):INote
+    +getTitle(String uuid):String lighter than getting a full note
+}
+
+class DemoLocalFileNoteStorage{
+    Just uses a simple file to store notes and note info for hackathon demo purposes
+    +getNotes():List<String> list of uuids
+    +getNote(String uuid):INote
+    +getTitle(String uuid):String
+}
+
+class OnlineDatabaseNoteStorage{
+    Uses some form of database backend for storage. Stretch goal or post hackathon development
+    +getNotes():List<String> list of uuids
+    +getNote(String uuid):INote
+    +getTitle(String uuid):String
+}
+
+class Note{
+    title: String
+    date: DateTime
+    body: String
+    image: File
+    uuid: String
+}
+
+interface ISentimentAnalyzer{
+    This would probably run in the backend
+    +analyzeText(String contents):double
+}
+
+class Calendar{
+    IDK what to put but here's a table_calendar package
+    https://pub.dev/packages/table_calendar
+}
+
+class DemoNaiveSentimentAnalyzer{
+    For hackathon purposes
+    +analyzeText(String contents):double
+}
+
+class ArtificialIntelligenceAnalyzer{
+    Stretch goal, low priority for Hackathon
+    +analyzeText(String contents):double
+}
+
+
+DemoLocalFileNoteStorage ..|> INoteStorage
+OnlineDatabaseNoteStorage ..|> INoteStorage
+Note --|> INote
+ArtificialIntelligenceAnalyzer ..|> ISentimentAnalyzer
+DemoNaiveSentimentAnalyzer ..|> ISentimentAnalyzer
+
+Calendar -> INoteStorage: Populates with data from
+INoteStorage - ISentimentAnalyzer
+note on link
+When adding a new note to the storage, analyze its sentiment
+end note
+
+@enduml

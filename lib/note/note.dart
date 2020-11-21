@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:serenity/note/i_note.dart';
 
 class Note implements INote {
-  String _body;
-  DateTime _date;
+  String _body = "";
+  DateTime _date = DateTime(0);
   File _image;
-  double _score;
-  String _title;
-  String _uuid;
+  double _score = 0;
+  String _title = "";
+  String _uuid = "";
   Note(this._uuid);
 
   @override
@@ -59,6 +59,10 @@ class Note implements INote {
   @override
   void setTitle(String newTitle) {
     this._title = newTitle;
+  }
+
+  void setScore(double score) {
+    this._score = score;
   }
 
   @override

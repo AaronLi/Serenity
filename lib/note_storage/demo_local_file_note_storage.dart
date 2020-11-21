@@ -46,11 +46,11 @@ class DemoLocalFileNoteStorage implements INoteStorage {
   }
 
   @override
-  Future<List<String>> getNotes(DateTime from, DateTime to) async {
-    List<String> out = [];
+  Future<List<INote>> getNotes(DateTime from, DateTime to) async {
+    List<INote> out = [];
     for (INote note in (await _readDatabase).values) {
       if (note.getDate().isAfter(from) && note.getDate().isBefore(to)) {
-        out.add(note.getUUID());
+        out.add(note);
       }
     }
     return out;
@@ -70,7 +70,8 @@ class DemoLocalFileNoteStorage implements INoteStorage {
       encodableNotes[note.getUUID()] = note.toJson();
     }
     (await _filepath).writeAsString(jsonEncode(encodableNotes));
-    //_local_database = null; // purge the local copy since the file has been updated
+    localDatabase =
+        null; // purge the local copy since the file has been updated
   }
 
   @override

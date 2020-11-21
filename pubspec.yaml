@@ -28,6 +28,7 @@ dependencies:
   path_provider: ^1.6.24
   intl: ^0.16.1
   uuid: ^2.2.2
+  google_fonts: ^1.1.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -45,6 +46,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/beaver.jpg
+    - assets/cat.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

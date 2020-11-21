@@ -6,9 +6,10 @@ class Note implements INote {
   String _body = "";
   DateTime _date = DateTime(0);
   File _image;
-  double _score = 0;
+  double _score = 0.5;
   String _title = "";
   String _uuid = "";
+  bool _analyze = true;
   Note(this._uuid);
 
   @override
@@ -72,7 +73,8 @@ class Note implements INote {
         'score': this._score,
         'title': this._title,
         'uuid': this._uuid,
-        'image_path': this._image.path
+        'image_path': this._image.path,
+        'analyze': this._analyze
       };
   @override
   Note.fromJson(Map<String, dynamic> json) {
@@ -82,5 +84,21 @@ class Note implements INote {
     this._title = json['title'];
     this._uuid = json['uuid'];
     this._image = File(json['image_path']);
+    this._analyze = json.containsKey('analyze') ? json['analyze'] : true;
+  }
+
+  @override
+  int compareTo(other) {
+    return this._date.compareTo(other._date);
+  }
+
+  @override
+  void setAnalyze(bool shouldAnalyze) {
+    this._analyze = shouldAnalyze;
+  }
+
+  @override
+  bool shouldAnalyze() {
+    return this._analyze;
   }
 }

@@ -78,7 +78,9 @@ class _NoteMakerState extends State<NoteMakerScreen> {
     }
     noteOut.setImage(safeSpace);
     // score text
-    noteOut.setScore(this.widget.noteAnalyzer.analyzeText(noteOut.getBody()));
+    if (noteOut.shouldAnalyze()) {
+      noteOut.setScore(this.widget.noteAnalyzer.analyzeText(noteOut.getBody()));
+    }
     // store in database
     this.widget.noteStorageLocation.putNote(noteOut);
   }
@@ -86,7 +88,24 @@ class _NoteMakerState extends State<NoteMakerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(widget.title)),
+        appBar: AppBar(
+          title: Text(widget.title),
+          actions: noteOut == null
+              ? []
+              : [
+                  Row(children: [
+                    Text("Silence"),
+                    Checkbox(
+                        value: noteOut.shouldAnalyze(),
+                        onChanged: (state) {
+                          setState(() {
+                            noteOut.setAnalyze(state);
+                          });
+                          return noteOut.shouldAnalyze();
+                        })
+                  ])
+                ],
+        ),
         body: FutureBuilder(
             future: this.noteLoader,
             builder: (context, AsyncSnapshot<INote> snapshot) {
@@ -94,6 +113,7 @@ class _NoteMakerState extends State<NoteMakerScreen> {
                 if (noteOut == null) {
                   noteOut = snapshot.data;
                   _image = snapshot.data.getImage();
+                  //_date = snapshot.data.getDate(); // uncomment for edited entries to remain in their original positions
                 }
                 return Form(
                     key: _noteMakerKey,
@@ -165,7 +185,13 @@ class _NoteMakerState extends State<NoteMakerScreen> {
               } else if (snapshot.hasError) {
                 return Text("Error");
               } else {
-                return Text("Loading");
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [CircularProgressIndicator()])
+                    ]);
               }
             }));
   }
